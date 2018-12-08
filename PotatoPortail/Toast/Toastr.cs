@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using ApplicationPlanCadre.Toast;
 
 namespace PotatoPortail.Toast
 {
@@ -11,7 +10,7 @@ namespace PotatoPortail.Toast
         public bool AfficherBoutonFermer { get; set; }
         public List<ToastMessage> ToastMessages { get; set; }
 
-        public ToastMessage AddToastMessage(string title, string message, ToastType toastType)
+        public ToastMessage AddToastMessage(string title, string message, ToastType toastType, bool isSticky)
         {
             var toast = new ToastMessage()
             {

@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 ﻿@using PotatoPortail.Toast
 @helper AfficherToasts(Toastr toastr)
 {
@@ -22,4 +23,30 @@
       });
         </script>
     }
+=======
+﻿@using PotatoPortail.Toast
+@helper AfficherToasts(Toastr toastr)
+{
+    if (toastr != null)
+    {
+        <script>
+      $(document).ready(function () {
+        toastr.options.boutonFermer = '@toastr.AfficherBoutonFermer';
+        toastr.options.recentOnTop = '@toastr.AfficherRecentOnTop';
+
+        @foreach (var message in toastr.ToastMessages)
+        {
+          var toastTypeValue = message.ToastType.ToString("F").ToLower();
+          @: const optionsOverride = { /* Add message specific options here */ };
+          if (message.IsSticky)
+          {
+            @:optionsOverride.timeOut = 0;
+            @:optionsOverride.extendedTimeout = 0;
+          }
+          @:toastr['@toastTypeValue']('@message.Message', '@message.Title', optionsOverride);
+        }
+      });
+        </script>
+    }
+>>>>>>> origin/dev
 }

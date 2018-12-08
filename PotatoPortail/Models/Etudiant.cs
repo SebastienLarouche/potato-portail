@@ -18,6 +18,8 @@ namespace PotatoPortail.Models
         [Key]
         public int IdEtudiant { get; set; }
 
+        public string NomComplet => Prenom + NomComplet;
+
         [Required]
         public string Prenom { get; set; }
 
@@ -47,6 +49,7 @@ namespace PotatoPortail.Models
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Application> Application { get; set; }
 
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual Preference Preference { get; set; }
     }
 }
