@@ -1,9 +1,10 @@
-﻿using ApplicationPlanCadre.Data;
-using ApplicationPlanCadre.Models;
+﻿using ApplicationPlanCadre.Controllers;
 using ApplicationPlanCadre.Models.Reunions;
 using ApplicationPlanCadre.ViewModels;
 using ApplicationPlanCadre.ViewModels.OrdresDuJourVM;
 using Microsoft.AspNet.Identity;
+using PotatoPortail.Data;
+using PotatoPortail.Models;
 using System;
 using System.Collections.Generic;
 using System.Data.Entity;
@@ -13,11 +14,11 @@ using System.Net;
 using System.Text.RegularExpressions;
 using System.Web.Mvc;
 
-namespace ApplicationPlanCadre.Controllers
+namespace PotatoPortail.Controllers
 {
     public class OrdreDuJourController : Controller
     {
-        private readonly BDPlanCadre _db = new BDPlanCadre();
+        private readonly BDPortail _db = new BDPortail();
 
         // GET: OdJ
         //[Route("Reunions/Index")]
@@ -77,12 +78,12 @@ namespace ApplicationPlanCadre.Controllers
         public ActionResult Create()
         {
             //createRepository populate la drop down liste en créant un viewmodel
-            var repo = new createRepository();
-            OrdreDuJourViewModel viewmodel = repo.createLieu();
+            var repo = new CreateRepository();
+            OrdreDuJourViewModel viewmodel = repo.CreateLieu();
 
             //Recherche du numéro de programme
             var programme = GetProgramme();
-            int NumProg = Convert.ToInt32(programme.First().discipline);
+            int NumProg = Convert.ToInt32(programme.First().Discipline);
 
             //recherche de l'ordre du jour basé sur le modèle
             //à l'aide du numéro de programme
@@ -486,7 +487,7 @@ namespace ApplicationPlanCadre.Controllers
         {
             var username = User.Identity.GetUserName();
             IQueryable<AccesProgramme> programme = from accesProgramme in _db.AccesProgramme
-                                                   where accesProgramme.userMail == username
+                                                   where accesProgramme.UserMail == username
                                                    select accesProgramme;
             return programme;
         }

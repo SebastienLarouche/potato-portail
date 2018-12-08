@@ -1,7 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Web.Mvc;
-using PotatoPortail.Migrations;
+//using PotatoPortail.Migrations;
+using PotatoPortail.Models;
 
 namespace PotatoPortail.Data
 {
@@ -12,7 +13,7 @@ namespace PotatoPortail.Data
         {
             using (var context = new BDPortail())
             {
-                List<SelectListItem> lieu = context.LieuDeLaReunion.AsNoTracking().Select(local => new SelectListItem { Value = local.idLieu.ToString(), Text = local.emplacementReunion}).ToList();
+                List<SelectListItem> lieu = context.LieuDeLaReunion.AsNoTracking().Select(local => new SelectListItem { Value = local.IdLieu.ToString(), Text = local.EmplacementReunion}).ToList();
                 var defaut = new SelectListItem()
                 {
                     Value = null,
