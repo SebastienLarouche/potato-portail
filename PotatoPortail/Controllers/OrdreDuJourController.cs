@@ -187,52 +187,73 @@ namespace PotatoPortail.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Edit(OrdreDuJourViewModel ordreDuJourViewModelCreerOdj)
         {
-            if (!ModelState.IsValid) return View(ordreDuJourViewModelCreerOdj);
-            var cpt = 0;
-            _db.Entry(ordreDuJourViewModelCreerOdj.OrdreDuJour).State = EntityState.Modified;
-            ordreDuJourViewModelCreerOdj.OrdreDuJour.IdModeleOrdreDuJour = _db.ModeleOrdreDuJour.First().IdModele;
-
-            if (ordreDuJourViewModelCreerOdj.SujetPointPrincipal != null)
+            if (ModelState.IsValid)
             {
-                foreach (var item in _db.SujetPointPrincipal)
+                int cpt = 0;
+                _db.Entry(ordreDuJourViewModelCreerOdj.OrdreDuJour).State = EntityState.Modified;
+                ordreDuJourViewModelCreerOdj.OrdreDuJour.IdModeleOrdreDuJour = _db.ModeleOrdreDuJour.First().IdModele;
+
+                if (ordreDuJourViewModelCreerOdj.SujetPointPrincipal != null)
                 {
-                    if (item.IdOrdreDuJour != ordreDuJourViewModelCreerOdj.OrdreDuJour.IdOdJ) continue;
-                    var updatedItem = item;
-                    updatedItem.SujetPoint = ordreDuJourViewModelCreerOdj.SujetPointPrincipal[cpt].SujetPoint;
-                    _db.Entry(updatedItem).State = EntityState.Modified;
-                    cpt++;
+                    foreach (var item in ordreDuJourViewModelCreerOdj.SujetPointPrincipal)
+                    {
+                        if (item.IdOrdreDuJour == ordreDuJourViewModelCreerOdj.OrdreDuJour.IdOdJ)
+                        {
+                            var updatedItem = item;
+                            updatedItem.SujetPoint = ordreDuJourViewModelCreerOdj.SujetPointPrincipal[cpt].SujetPoint;
+                            _db.Entry(updatedItem).State = EntityState.Modified;
+                            cpt++;
+                        }
+                    }
+                    int position = 0;
+                    foreach (var itemSP in ordreDuJourViewModelCreerOdj.ListeIdSousPointCache)
+                    {
+                        if (itemSP > ordreDuJourViewModelCreerOdj.ListeSousPoint.Count)
+                        {
+                            SousPointSujet souspoint = (from SousPointSujet in _db.SousPointSujet
+                                                        where SousPointSujet.IdSousPoint == itemSP
+                                                        select SousPointSujet).First();
+                            if (souspoint != null)
+                            {
+                                souspoint.SujetSousPoint = ordreDuJourViewModelCreerOdj.ListeSousPoint[position];
+                                _db.Entry(souspoint).State = EntityState.Modified;
+                            }
+                            else
+                            {
+                                return HttpNotFound();
+                            }
+                        }
+                        else
+                        {
+                            bool EmpecheDoublons = true;
+                            List<SujetPointPrincipal> listeSujetPointPrincipalQuery = GetPointPrincipal();
+                            List<SujetPointPrincipal> listeSujetPointPrincipal = new List<SujetPointPrincipal>();
+                            foreach (var item in listeSujetPointPrincipalQuery)
+                            {
+                                if (ordreDuJourViewModelCreerOdj.OrdreDuJour.IdOdJ == item.IdOrdreDuJour)
+                                {
+                                    listeSujetPointPrincipal.Add(item);
+                                }
+                            }
+                            foreach (var item in listeSujetPointPrincipal)
+                            {
+                                if (EmpecheDoublons)
+                                {
+                                    InsertSujetSousPoint(ordreDuJourViewModelCreerOdj.ListeSousPoint[position], listeSujetPointPrincipal[ordreDuJourViewModelCreerOdj.ListeIdSousPointCache[position]].IdPointPrincipal);
+                                    EmpecheDoublons = false;
+                                }
+                            }
+                        }
+                        position++;
+                    }
                 }
+                _db.SaveChanges();
+                this.AddToastMessage("Modification d'un ordre du jour", "La modification a été effectuée", Toast.ToastType.Success);
+                return RedirectToAction("Index");
             }
-
-            _db.SaveChanges();
-            this.AddToastMessage("Modification d'un ordre du jour", "La modification a été effectuée",
-                ToastType.Success);
-            return RedirectToAction("Index");
-
-        }
-        
-        public ActionResult Delete(int? id)
-        {
-            if (id == null)
-            {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
-
-            var ordreDuJour = _db.OrdreDuJour.Find(id);
-            if (ordreDuJour == null)
-            {
-                return HttpNotFound();
-            }
-
-            var sujetPointPrincipal = _db.SujetPointPrincipal.Where(item => item.IdOrdreDuJour == id).ToList();
-
-            var ordreDuJourViewModelCreerOdj = new OrdreDuJourViewModel
-            {
-                OrdreDuJour = ordreDuJour, SujetPointPrincipal = sujetPointPrincipal
-            };
             return View(ordreDuJourViewModelCreerOdj);
         }
-        
+
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(int id)
@@ -387,6 +408,20 @@ namespace PotatoPortail.Controllers
             return (from odj in _db.OrdreDuJour
                     orderby odj.IdOdJ descending
                     select odj).Take(10);
+        }
+        private List<SujetPointPrincipal> GetPointPrincipal()
+        {
+            List<SujetPointPrincipal> listeSujetPointPrincipal = new List<SujetPointPrincipal>();
+            var listeSujetPointPrincipalQuery = from SujetPointPrincipal in _db.SujetPointPrincipal
+                                                select SujetPointPrincipal;
+            if (listeSujetPointPrincipalQuery.Count() != 0)
+            {
+                foreach (var item in listeSujetPointPrincipalQuery)
+                {
+                    listeSujetPointPrincipal.Add(item);
+                }
+            }
+            return listeSujetPointPrincipal;
         }
 
         private List<SujetPointPrincipal> GetPointPrincipal(int id)
