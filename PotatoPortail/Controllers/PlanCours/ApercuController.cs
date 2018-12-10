@@ -99,7 +99,7 @@ namespace PotatoPortail.Controllers.PlanCours
 
                 CreationEnonceCompetence(viewModel, (int)id);
             }
-            else { this.AddToastMessage("Attention", "Aucun plan cours n'est associé à votre compte", ToastType.Warning); }
+            else { this.AddToastMessage("Rappel", "Aucun plan cours n'est associé à votre compte", ToastType.Success); }
 
             return View(viewModel);
         }

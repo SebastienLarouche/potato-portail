@@ -4,186 +4,185 @@
 }
 @Html.Hidden("idPlanCours", (int?) ViewBag.idPlanCours)
 @Html.Partial("_Menu", Model.MainPageViewModel)
-<div class="super-view">
-    <div class="form-box" style="width: 1020px; margin-left: auto; margin-right: auto; text-align: center; vertical-align: middle;">
-        <img src="@ViewBag.imageDepart" alt="DICJ" style="width: 500px; height: 200px; margin: 7px auto 7px auto;"/><br>
-        <p>PLAN DE COURS</p><br>
-        <div style="display: inline-block" class="text-justify">
-            <p>@Html.Raw(ViewBag.infosCours)</p>
-            <p>@Html.Raw(ViewBag.infosProf)</p>
-            <p>@Html.Raw(ViewBag.phrase)</p>
-            <p>@Html.Raw(ViewBag.session)</p>
-            <img src="@ViewBag.imageCegep" alt="CEGEP" style="width: 200px; height: 100px;"/><br><br>
 
-            @if (Model.IndexSection != null)
-            {
+<div class="super-view">
+    @if (Model.IndexSection != null)
+    {<div class="form-box" style="width: 1020px; margin-left: auto; margin-right: auto; text-align: center; vertical-align: middle;">
+            <img src="@ViewBag.imageDepart" alt="DICJ" style="width: 500px; height: 200px; margin: 7px auto 7px auto;" /><br>
+            <p>PLAN DE COURS</p><br>
+            <div style="display: inline-block" class="text-justify">
+                <p>@Html.Raw(ViewBag.infosCours)</p>
+                <p>@Html.Raw(ViewBag.infosProf)</p>
+                <p>@Html.Raw(ViewBag.phrase)</p>
+                <p>@Html.Raw(ViewBag.session)</p>
+                <img src="@ViewBag.imageCegep" alt="CEGEP" style="width: 200px; height: 100px;" /><br><br>
+
+
                 foreach (var section in Model.IndexSection)
                 {
-                    <label>Html.DisplayFor(Model => Model.TitreSection[section])</label>
-                    <p>Html.DisplayFor(Model => Model.TexteContenu[section])</p>
+                <label>Html.DisplayFor(Model => Model.TitreSection[section])</label>
+                <p>Html.DisplayFor(Model => Model.TexteContenu[section])</p>
                 }
-            }
-        </div>
-        @if (Model.IndexSection != null)
-        {
-        <div class="plan-cadre-table-container">
-            <table class="plan-cadre-table">
-                <tr>
-                    <th style="width: 20%">Objectif - Énoncé des compétences</th>
-                    <th style="width: 45%">Standard - Contexte de réalisation</th>
-                    <th style="width: 35%">Indication pédagogiques, s'il y a lieu</th>
-                </tr>
-                @foreach (var enonceCompetence in Model.ListeEnonceCompetence)
-                {
-                    <tr>
-                        <td style="width: 20%">
-                            <p>Html.DisplayFor(m => enonceCompetence.Description) (Html.DisplayFor(m => enonceCompetence.CodeCompetence))</p>
-                            <p>Html.DisplayFor(m => m.PonderationEnHeure) heures</p>
-                        </td>
-                        <td style="width: 45%">
-                            <ul class="hyphen-list">
-                                @foreach (var elementCompetence in Model.ListeElementCompetence)
-                                {
-                                    if (elementCompetence.IdCompetence == enonceCompetence.IdCompetence)
-                                    {
-                                        <li>Html.DisplayFor(m => elementCompetence.Description)</li>
-                                    }
-                                }
-                            </ul>
-                        </td>
-                    </tr>
-                }
-            </table>
-            @foreach (var planCadreCompetence in Model.ListePlanCadreCompetence)
-            {
+            </div>
+
+            <div class="plan-cadre-table-container">
                 <table class="plan-cadre-table">
                     <tr>
-                        <th colspan="4">
-                            @foreach (var enonce in Model.ListeEnonceCompetence)
-                            {
-                                if (planCadreCompetence.IdCompetence == enonce.IdCompetence)
-                                {
-                                    <p>Html.DisplayFor(m => enonce.Description) (Html.DisplayFor(m => enonce.CodeCompetence))</p>
-                                }
-                            }
-                        </th>
+                        <th style="width: 20%">Objectif - Énoncé des compétences</th>
+                        <th style="width: 45%">Standard - Contexte de réalisation</th>
+                        <th style="width: 35%">Indication pédagogiques, s'il y a lieu</th>
                     </tr>
-                    <tr>
-                        <th style="width: 15%">
-                            Éléments de compétence
-                        </th>
-                        <th style="width: 30%">
-                            Critères de performance
-                        </th>
-                        <th style="width: 30%">
-                            Éléments de connaissances
-                        </th>
-                        <th style="width: 25%">
-                            Activités d'apprentissage suggérées
-                        </th>
-                    </tr>
-                    @for (var indexElementCompetence = 0; indexElementCompetence < Model.ListeElementCompetence.Count; indexElementCompetence++)
+                    @foreach (var enonceCompetence in Model.ListeEnonceCompetence)
                     {
-                        var planCadreElement = Model.ListePlanCadreElement[indexElementCompetence];
-                        if (Model.ListeElementCompetence.Find(x => x.IdElement == planCadreElement.IdElement) != null)
-                        {
-                            var elementCompetence = Model.ListeElementCompetence.Find(x => x.IdElement == planCadreElement.IdElement);
-                            <tr>
-                                <td style="width: 15%">
-                                    <ol start="@elementCompetence.Numero">
-                                        <li> Html.DisplayFor(m => elementCompetence.Description)</li>
-                                    </ol>
-                                </td>
-                                @{
-                                    var isPreviousUsingSameConnaissance = false;
-                                    if (indexElementCompetence > 0)
+                        <tr>
+                            <td style="width: 20%">
+                                <p>Html.DisplayFor(m => enonceCompetence.Description) (Html.DisplayFor(m => enonceCompetence.CodeCompetence))</p>
+                                <p>Html.DisplayFor(m => m.PonderationEnHeure) heures</p>
+                            </td>
+                            <td style="width: 45%">
+                                <ul class="hyphen-list">
+                                    @foreach (var elementCompetence in Model.ListeElementCompetence)
                                     {
-                                        var previousPlanCadreElement = Model.ListePlanCadreElement[indexElementCompetence - 1];
-                                        if (Model.ListeElementConnaissance.Find(x => x.IdPlanCadreElement == previousPlanCadreElement.IdPlanCadreElement) != null)
+                                        if (elementCompetence.IdCompetence == enonceCompetence.IdCompetence)
                                         {
-                                            isPreviousUsingSameConnaissance = (previousPlanCadreElement.IdPlanCadreElement == Model.ListeElementConnaissance.Find(x => x.IdPlanCadreElement == previousPlanCadreElement.IdPlanCadreElement).IdPlanCadreElement);
+                                            <li>Html.DisplayFor(m => elementCompetence.Description)</li>
                                         }
                                     }
-                                    var isThereConnaissanceFollowing = false;
-                                    var connaissanceRowspan = 1;
-                                    for (var indexPlanCadreElement = indexElementCompetence + 1; indexPlanCadreElement < Model.ListePlanCadreElement.Count; indexPlanCadreElement++)
+                                </ul>
+                            </td>
+                        </tr>
+                    }
+                </table>
+                @foreach (var planCadreCompetence in Model.ListePlanCadreCompetence)
+                {
+                    <table class="plan-cadre-table">
+                        <tr>
+                            <th colspan="4">
+                                @foreach (var enonce in Model.ListeEnonceCompetence)
+                                {
+                                    if (planCadreCompetence.IdCompetence == enonce.IdCompetence)
                                     {
-                                        var followingPlanCadreElement = Model.ListePlanCadreElement[indexPlanCadreElement];
-                                        if (followingPlanCadreElement.IdPlanCadreElement == planCadreElement.IdPlanCadreElement)
+                                        <p>Html.DisplayFor(m => enonce.Description) (Html.DisplayFor(m => enonce.CodeCompetence))</p>
+                                    }
+                                }
+                            </th>
+                        </tr>
+                        <tr>
+                            <th style="width: 15%">
+                                Éléments de compétence
+                            </th>
+                            <th style="width: 30%">
+                                Critères de performance
+                            </th>
+                            <th style="width: 30%">
+                                Éléments de connaissances
+                            </th>
+                            <th style="width: 25%">
+                                Activités d'apprentissage suggérées
+                            </th>
+                        </tr>
+                        @for (var indexElementCompetence = 0; indexElementCompetence < Model.ListeElementCompetence.Count; indexElementCompetence++)
+                        {
+                            var planCadreElement = Model.ListePlanCadreElement[indexElementCompetence];
+                            if (Model.ListeElementCompetence.Find(x => x.IdElement == planCadreElement.IdElement) != null)
+                            {
+                                var elementCompetence = Model.ListeElementCompetence.Find(x => x.IdElement == planCadreElement.IdElement);
+                                <tr>
+                                    <td style="width: 15%">
+                                        <ol start="@elementCompetence.Numero">
+                                            <li> Html.DisplayFor(m => elementCompetence.Description)</li>
+                                        </ol>
+                                    </td>
+                                    @{
+                                        var isPreviousUsingSameConnaissance = false;
+                                        if (indexElementCompetence > 0)
                                         {
-                                            isThereConnaissanceFollowing = true;
-                                            connaissanceRowspan++;
+                                            var previousPlanCadreElement = Model.ListePlanCadreElement[indexElementCompetence - 1];
+                                            if (Model.ListeElementConnaissance.Find(x => x.IdPlanCadreElement == previousPlanCadreElement.IdPlanCadreElement) != null)
+                                            {
+                                                isPreviousUsingSameConnaissance = (previousPlanCadreElement.IdPlanCadreElement == Model.ListeElementConnaissance.Find(x => x.IdPlanCadreElement == previousPlanCadreElement.IdPlanCadreElement).IdPlanCadreElement);
+                                            }
+                                        }
+                                        var isThereConnaissanceFollowing = false;
+                                        var connaissanceRowspan = 1;
+                                        for (var indexPlanCadreElement = indexElementCompetence + 1; indexPlanCadreElement < Model.ListePlanCadreElement.Count; indexPlanCadreElement++)
+                                        {
+                                            var followingPlanCadreElement = Model.ListePlanCadreElement[indexPlanCadreElement];
+                                            if (followingPlanCadreElement.IdPlanCadreElement == planCadreElement.IdPlanCadreElement)
+                                            {
+                                                isThereConnaissanceFollowing = true;
+                                                connaissanceRowspan++;
+                                            }
+                                            else
+                                            {
+                                                break;
+                                            }
+                                        }
+                                    }
+                                    @if (!isPreviousUsingSameConnaissance)
+                                    {
+                                        if (isThereConnaissanceFollowing)
+                                        {
+                                            <td rowspan="@connaissanceRowspan" class="rich-cell">
+                                                @foreach (var elementConnaissance in Model.ListeElementConnaissance)
+                                                {
+                                                    <ul>@Html.Raw(elementConnaissance.Description)</ul>
+                                                }
+                                            </td>
                                         }
                                         else
                                         {
-                                            break;
+                                            <td class="rich-cell">
+                                                <ul>
+                                                    @foreach (var elementConnaissance in Model.ListeElementConnaissance)
+                                                    {
+                                                        <li>@Html.Raw(elementConnaissance.Description)</li>
+                                                    }
+                                                </ul>
+                                            </td>
                                         }
                                     }
-                                }
-                                @if (!isPreviousUsingSameConnaissance)
-                                {
-                                    if (isThereConnaissanceFollowing)
-                                    {
-                                        <td rowspan="@connaissanceRowspan" class="rich-cell">
-                                            @foreach (var elementConnaissance in Model.ListeElementConnaissance)
+                                    @{
+                                        var isPreviousUsingSameActivite = false;
+                                        if (indexElementCompetence > 0)
+                                        {
+                                            var previousPlanCadreElement = Model.ListePlanCadreElement[indexElementCompetence - 1];
+                                            if (Model.ListeActiviteApprentissage.Find(x => x.IdPlanCadreElement == previousPlanCadreElement.IdPlanCadreElement) != null)
                                             {
-                                                <ul>@Html.Raw(elementConnaissance.Description)</ul>
+                                                isPreviousUsingSameActivite = (previousPlanCadreElement.IdPlanCadreElement == Model.ListeActiviteApprentissage.Find(x => x.IdPlanCadreElement == previousPlanCadreElement.IdPlanCadreElement).IdPlanCadreElement);
                                             }
-                                        </td>
+                                        }
                                     }
-                                    else
+                                    @if (!isPreviousUsingSameActivite)
                                     {
                                         <td class="rich-cell">
                                             <ul>
-                                                @foreach (var elementConnaissance in Model.ListeElementConnaissance)
+                                                @foreach (var activite in Model.ListeActiviteApprentissage)
                                                 {
-                                                    <li>@Html.Raw(elementConnaissance.Description)</li>
+                                                    <li>@Html.Raw(activite.DescActivite)</li>
                                                 }
                                             </ul>
                                         </td>
                                     }
-                                }
-                                @{
-                                    var isPreviousUsingSameActivite = false;
-                                    if (indexElementCompetence > 0)
-                                    {
-                                        var previousPlanCadreElement = Model.ListePlanCadreElement[indexElementCompetence - 1];
-                                        if (Model.ListeActiviteApprentissage.Find(x => x.IdPlanCadreElement == previousPlanCadreElement.IdPlanCadreElement) != null)
-                                        {
-                                            isPreviousUsingSameActivite = (previousPlanCadreElement.IdPlanCadreElement == Model.ListeActiviteApprentissage.Find(x => x.IdPlanCadreElement == previousPlanCadreElement.IdPlanCadreElement).IdPlanCadreElement);
-                                        }
-                                    }
-                                }
-                                @if (!isPreviousUsingSameActivite)
-                                {
-                                    <td class="rich-cell">
-                                        <ul>
-                                            @foreach (var activite in Model.ListeActiviteApprentissage)
-                                            {
-                                                <li>@Html.Raw(activite.DescActivite)</li>
-                                            }
-                                        </ul>
-                                    </td>
-                                }
-                            </tr>
+                                </tr>
+                            }
                         }
-                    }
+                    </table>
+                }
+                <table class="plan-cadre-table">
+                    <tr>
+                        <th style="width: 50%">
+                            Environnement physique
+                        </th>
+                        <th style="width: 50%">
+                            Ressources didactiques suggérées
+                        </th>
+                    </tr>
                 </table>
-            }
-            <table class="plan-cadre-table">
-                <tr>
-                    <th style="width: 50%">
-                        Environnement physique
-                    </th>
-                    <th style="width: 50%">
-                        Ressources didactiques suggérées
-                    </th>
-                </tr>
-            </table>
-        </div>}
-        <div class="menu-flottant">
-            <a class="fancy-button blanc" href="@Url.Action("", "")"><span class="glyphicon glyphicon-triangle-left"></span> Retour</a>
-        </div>
+            </div>
+            <div class="menu-flottant">
+                <a class="fancy-button blanc" href="@Url.Action("", "")"><span class="glyphicon glyphicon-triangle-left"></span> Retour</a>
+            </div>
 
-    </div>
+        </div>}
 </div>
